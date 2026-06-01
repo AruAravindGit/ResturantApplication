@@ -1,0 +1,65 @@
+.tablsList {
+  display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+}
+.tabValue {
+  margin-left: 10px;
+  width: 230px;
+}
+.dishesList {
+  list-style-type: none;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 0px;
+}
+.dishList {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+.dishImage {
+  height: 200px;
+  width: 200px;
+}
+.priceContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.descriptionContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.dataContainer {
+  width: 70%;
+}
+.imgContainer {
+  width: 30%;
+  margin-left: 200px;
+}
+.button {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.count {
+  margin-left: 10px;
+}
+.addCount {
+  display: flex;
+  flex-direction: row;
+}
+.buttonStyle {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  margin-left: 10px;
+  cursor: pointer;
+  text-decoration: underline;
+  color: red;
+}
