@@ -18,6 +18,7 @@ class Home extends Component {
     totalCount: 0,
     initialDishName: '',
     categoryDish: [],
+    mainData: '',
   }
 
   componentDidMount() {
@@ -26,63 +27,63 @@ class Home extends Component {
 
   changeDish = id => {
     const {tabsData} = this.state
-    const index = tabsData[0].table_menu_list.findIndex(
-      eachval => eachval.menu_category === id,
-    )
+    const index = tabsData.findIndex(eachval => eachval.menu_category === id)
 
     this.setState({
       initialDishIndex: index,
       initialDishName: id,
-      categoryDish: tabsData[0].table_menu_list[index].category_dishes,
+      categoryDish: tabsData[index].category_dishes,
     })
   }
 
   increaseCart = value => {
+    const {tabsData} = this.state
     this.setState(prevState => {
-      const updatedTabsData = [...prevState.tabsData]
-
-      updatedTabsData[0].table_menu_list = updatedTabsData[0].table_menu_list.map(
-        menu => ({
-          ...menu,
-          category_dishes: menu.category_dishes.map(dish =>
-            dish.dish_id === value
-              ? {...dish, quantity: dish.quantity + 1}
-              : dish,
-          ),
-        }),
-      )
+      const upData = tabsData.map(menu => ({
+        ...menu,
+        category_dishes: menu.category_dishes.map(dish =>
+          dish.dish_id === value
+            ? {...dish, quantity: dish.quantity + 1}
+            : dish,
+        ),
+      }))
 
       return {
-        tabsData: updatedTabsData,
-        categoryDish:
-          updatedTabsData[0].table_menu_list[prevState.initialDishIndex]
-            .category_dishes,
+        tabsData: upData,
+        categoryDish: upData[prevState.initialDishIndex].category_dishes,
         totalCount: prevState.totalCount + 1,
       }
     })
   }
 
   decreaseCart = value => {
+    const {tabsData} = this.state
     this.setState(prevState => {
-      const updatedTabsData = [...prevState.tabsData]
-
-      updatedTabsData[0].table_menu_list = updatedTabsData[0].table_menu_list.map(
-        menu => ({
-          ...menu,
-          category_dishes: menu.category_dishes.map(dish =>
-            dish.dish_id === value
-              ? {...dish, quantity: dish.quantity - 1}
-              : dish,
-          ),
+      const upData = tabsData.map(menu => ({
+        ...menu,
+        category_dishes: menu.category_dishes.map(dish => {
+          if (dish.dish_id === value) {
+            if (dish.quantity === 0) {
+              return {
+                ...dish,
+                quantity: 0,
+              }
+            }
+            return {
+              ...dish,
+              quantity: dish.quantity - 1,
+            }
+          }
+          return {
+            ...dish,
+          }
         }),
-      )
+      }))
 
       return {
-        tabsData: updatedTabsData,
-        categoryDish:
-          updatedTabsData[0].table_menu_list[prevState.initialDishIndex]
-            .category_dishes,
-        totalCount: prevState.totalCount - 1,
+        tabsData: upData,
+        categoryDish: upData[prevState.initialDishIndex].category_dishes,
+        totalCount: prevState.totalCount === 0 ? 0 : prevState.totalCount - 1,
       }
     })
   }
@@ -109,47 +110,51 @@ class Home extends Component {
     ]
 
     if (response.ok === true) {
+      console.log(updatedData)
       this.setState({
-        tabsData: updatedData,
+        tabsData: updatedData[0].table_menu_list,
         apiStatus: constApiStatus.success,
         initialDishName: updatedData[0].table_menu_list[0].menu_category,
         categoryDish:
           updatedData[0].table_menu_list[initialDishIndex].category_dishes,
+        mainData: updatedData[0].restaurant_name,
       })
     }
   }
 
   render() {
     const {tabsData, apiStatus, categoryDish} = this.state
-    const {totalCount, initialDishName} = this.state
+    const {totalCount, initialDishName, mainData} = this.state
     const categoryData = categoryDish
     console.log(categoryData)
     return (
       <>
-        <Header count={totalCount} />
         {constApiStatus.loading === apiStatus ? (
           <div className="products-loader-container" data-testid="loader">
             <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
           </div>
         ) : (
-          <ul className="tablsList">
-            {tabsData.length > 0 &&
-              tabsData[0].table_menu_list.map(eachVal => (
-                <li className="tabValue" key={eachVal.menu_category_id}>
-                  <button
-                    type="button"
-                    className={
-                      eachVal.menu_category === initialDishName
-                        ? 'buttonStyle'
-                        : 'button'
-                    }
-                    onClick={() => this.changeDish(eachVal.menu_category)}
-                  >
-                    {eachVal.menu_category}
-                  </button>
-                </li>
-              ))}
-          </ul>
+          <>
+            <Header count={totalCount} resName={mainData} />
+            <ul className="tablsList">
+              {tabsData.length > 0 &&
+                tabsData.map(eachVal => (
+                  <li className="tabValue" key={eachVal.menu_category_id}>
+                    <button
+                      type="button"
+                      className={
+                        eachVal.menu_category === initialDishName
+                          ? 'buttonStyle'
+                          : 'button'
+                      }
+                      onClick={() => this.changeDish(eachVal.menu_category)}
+                    >
+                      {eachVal.menu_category}
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </>
         )}
         <ul className="dishesList">
           {tabsData.length > 0 &&
@@ -158,8 +163,9 @@ class Home extends Component {
                 <div className="dataContainer">
                   <h1>{eachDish.dish_name}</h1>
                   <div className="priceContainer">
-                    <p>{eachDish.dish_currency}</p>
-                    <p>{eachDish.dish_price}</p>
+                    <p>
+                      {eachDish.dish_currency} {eachDish.dish_price}
+                    </p>
                   </div>
                   <div className="descriptionContainer">
                     <p>{eachDish.dish_description}</p>
