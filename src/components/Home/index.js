@@ -169,7 +169,7 @@ class Home extends Component {
                   </div>
                   <div className="descriptionContainer">
                     <p>{eachDish.dish_description}</p>
-                    <p>{eachDish.dish_calories}</p>
+                    <p>{eachDish.dish_calories} Calories</p>
                   </div>
                   {!eachDish.dish_Availability ? (
                     <p>Not available</p>
