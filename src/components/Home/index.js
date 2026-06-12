@@ -1,5 +1,6 @@
 import {Component} from 'react'
 import Loader from 'react-loader-spinner'
+import CartContext from '../../context/CartContext'
 import Header from '../Header'
 import './index.css'
 
@@ -122,92 +123,133 @@ class Home extends Component {
     }
   }
 
-  render() {
-    const {tabsData, apiStatus, categoryDish} = this.state
+  renderLoaderView = () => (
+    <div className="products-loader-container" data-testid="loader">
+      <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
+    </div>
+  )
+
+  renderProductsView = () => {
+    const {tabsData, categoryDish} = this.state
     const {totalCount, initialDishName, mainData} = this.state
     const categoryData = categoryDish
-    console.log(categoryData)
+
     return (
-      <>
-        {constApiStatus.loading === apiStatus ? (
-          <div className="products-loader-container" data-testid="loader">
-            <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
-          </div>
-        ) : (
-          <>
-            <Header count={totalCount} resName={mainData} />
-            <ul className="tablsList">
-              {tabsData.length > 0 &&
-                tabsData.map(eachVal => (
-                  <li className="tabValue" key={eachVal.menu_category_id}>
-                    <button
-                      type="button"
-                      className={
-                        eachVal.menu_category === initialDishName
-                          ? 'buttonStyle'
-                          : 'button'
-                      }
-                      onClick={() => this.changeDish(eachVal.menu_category)}
-                    >
-                      {eachVal.menu_category}
-                    </button>
-                  </li>
-                ))}
-            </ul>
-          </>
-        )}
-        <ul className="dishesList">
-          {tabsData.length > 0 &&
-            categoryData.map(eachDish => (
-              <li className="dishList" key={eachDish.dish_id}>
-                <div className="dataContainer">
-                  <h1>{eachDish.dish_name}</h1>
-                  <div className="priceContainer">
-                    <p>
-                      {eachDish.dish_currency} {eachDish.dish_price}
-                    </p>
-                  </div>
-                  <div className="descriptionContainer">
-                    <p>{eachDish.dish_description}</p>
-                    <p>{eachDish.dish_calories} Calories</p>
-                  </div>
-                  {!eachDish.dish_Availability ? (
-                    <p>Not available</p>
-                  ) : (
-                    <div className="addCount">
-                      <button
-                        className="button"
-                        type="button"
-                        onClick={() => this.decreaseCart(eachDish.dish_id)}
-                      >
-                        -
-                      </button>
-                      <p className="count">{eachDish.quantity}</p>
-                      <button
-                        className="button"
-                        type="button"
-                        onClick={() => this.increaseCart(eachDish.dish_id)}
-                      >
-                        +
-                      </button>
-                    </div>
-                  )}
-                  {eachDish.addonCat.length > 1 ? (
-                    <p>Customizations available</p>
-                  ) : null}
-                </div>
-                <div className="imgContainer">
-                  <img
-                    src={eachDish.dish_image}
-                    alt={eachDish.dish_name}
-                    className="dishImage"
-                  />
-                </div>
-              </li>
-            ))}
-        </ul>
-      </>
+      <CartContext.Consumer>
+        {value => {
+          const {addCartItem} = value
+
+          const addItemToCart = data => {
+            addCartItem({...data, resName: mainData})
+          }
+
+          return (
+            <>
+              <>
+                <Header count={totalCount} resName={mainData} />
+                <ul className="tablsList">
+                  {tabsData.length > 0 &&
+                    tabsData.map(eachVal => (
+                      <li className="tabValue" key={eachVal.menu_category_id}>
+                        <button
+                          type="button"
+                          className={
+                            eachVal.menu_category === initialDishName
+                              ? 'buttonStyle'
+                              : 'button'
+                          }
+                          onClick={() => this.changeDish(eachVal.menu_category)}
+                        >
+                          {eachVal.menu_category}
+                        </button>
+                      </li>
+                    ))}
+                </ul>
+              </>
+              <ul className="dishesList">
+                {tabsData.length > 0 &&
+                  categoryData.map(eachDish => (
+                    <li className="dishList" key={eachDish.dish_id}>
+                      <div className="dataContainer">
+                        <h1>{eachDish.dish_name}</h1>
+                        <div className="priceContainer">
+                          <p>
+                            {eachDish.dish_currency} {eachDish.dish_price}
+                          </p>
+                        </div>
+                        <div className="descriptionContainer">
+                          <p>{eachDish.dish_description}</p>
+                          <p>{eachDish.dish_calories} Calories</p>
+                        </div>
+                        {!eachDish.dish_Availability ? (
+                          <p>Not available</p>
+                        ) : (
+                          <div className="addCount">
+                            <button
+                              className="button"
+                              type="button"
+                              onClick={() =>
+                                this.decreaseCart(eachDish.dish_id)
+                              }
+                            >
+                              -
+                            </button>
+                            <p className="count">{eachDish.quantity}</p>
+                            <button
+                              className="button"
+                              type="button"
+                              onClick={() =>
+                                this.increaseCart(eachDish.dish_id)
+                              }
+                            >
+                              +
+                            </button>
+                          </div>
+                        )}
+                        {eachDish.addonCat.length > 1 ? (
+                          <p>Customizations available</p>
+                        ) : null}
+                        {eachDish.quantity > 0 ? (
+                          <button
+                            className="addCartButtonStyle"
+                            type="button"
+                            onClick={() => addItemToCart(eachDish)}
+                          >
+                            ADD TO CART
+                          </button>
+                        ) : null}
+                      </div>
+                      <div className="imgContainer">
+                        <img
+                          src={eachDish.dish_image}
+                          alt={eachDish.dish_name}
+                          className="dishImage"
+                        />
+                      </div>
+                    </li>
+                  ))}
+              </ul>
+            </>
+          )
+        }}
+      </CartContext.Consumer>
     )
+  }
+
+  renderAllViews = () => {
+    const {apiStatus} = this.state
+    switch (apiStatus) {
+      case constApiStatus.loading:
+        return this.renderLoaderView()
+      case constApiStatus.success:
+        return this.renderProductsView()
+      default:
+        return null
+    }
+  }
+
+  render() {
+    return <>{this.renderAllViews()}</>
   }
 }
 

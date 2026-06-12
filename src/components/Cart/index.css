@@ -1,0 +1,143 @@
+.cart-item {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0px 4px 16px 0px #eaebed;
+}
+
+.cart-content-container {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 1110px;
+}
+
+.removeButton {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-color: transparent;
+  color: #3b82f6;
+  align-self: flex-end;
+  font-weight: 500;
+}
+
+.cart-heading {
+  color: #3e4c59;
+  font-family: 'Roboto';
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.cart-product-image {
+  width: 96px;
+  height: 96px;
+  border-radius: 4px;
+}
+
+.cart-item-details-container {
+  margin-left: 16px;
+}
+
+.cart-product-title {
+  color: #171f46;
+  font-family: 'Roboto';
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.cart-product-brand {
+  color: #64748b;
+  font-family: 'Roboto';
+  font-size: 10px;
+}
+
+.cart-quantity-container {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-controller-button {
+  padding: 0;
+}
+
+.cart-quantity {
+  color: #52606d;
+  font-family: 'Roboto';
+  font-size: 12px;
+  font-weight: 500;
+  margin: 8px;
+  line-height: 1.3;
+}
+
+.total-price-remove-container {
+  display: flex;
+  align-items: center;
+}
+
+.cart-total-price {
+  color: #0b69ff;
+  font-family: 'Roboto';
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 0;
+  min-width: 100px;
+}
+
+.remove-button {
+  background-color: transparent;
+  color: #334155;
+  font-family: 'Roboto';
+  font-size: 10px;
+  line-height: 16px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.delete-button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-left: 32px;
+}
+
+.cart-empty-view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+}
+
+.cart-empty-img {
+  width: 180px;
+  height: 190px;
+}
+
+.cart-empty-heading {
+  color: #1e293b;
+  font-family: 'Roboto';
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.shop-now-btn {
+  background-color: #0b69ff;
+  color: #ffffff;
+  font-family: 'Roboto';
+  font-size: 12px;
+  border-radius: 8px;
+  border: none;
+  padding-left: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 16px;
+  outline: none;
+  cursor: pointer;
+}

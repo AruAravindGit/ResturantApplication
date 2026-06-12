@@ -63,3 +63,12 @@
   text-decoration: underline;
   color: red;
 }
+
+.addCartButtonStyle {
+  background-color: rgb(93, 223, 93);
+  width: 110px;
+  height: 30px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
